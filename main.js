@@ -22,7 +22,7 @@ const currencyData = {
   },
   async getCurrency(from, to) {
     const res = await fetch(
-      `https://free.currconv.com/api/v7/convert?q=${from}_${to}&apiKey=916fd477f22e3d463b54`
+      `https://free.currconv.com/api/v7/convert?q=${this.from}_${this.to}&apiKey=916fd477f22e3d463b54`
     );
     const data = await res.json();
     console.log(data);
@@ -38,6 +38,7 @@ const UI = {
       toOption: document.querySelector("#to-option"),
     };
   },
+
   async initialize() {
     const { fromOption, toOption, fromInput, toInput } = this.allSelectors();
     const data = await currencyData.getData();
@@ -54,20 +55,27 @@ const UI = {
 
     const fromValue = fromInput.value;
     const toValue = toInput.value;
-    fromOption.addEventListener("change", () => {
+    fromOption.addEventListener("change", async () => {
       // console.log(fromOption.value);
       const valueOptionFrom = fromOption.value;
       const valueOptionTo = toOption.value;
+      let fromVal;
+      let toVal;
       data.filter((value) => {
         if (value.currencyName === valueOptionFrom) {
           currencyData.from = value.id;
+          fromVal = value.id;
         }
         if (value.currencyName === valueOptionTo) {
           currencyData.to = value.id;
+          toVal = value.id;
         }
         return;
       });
     });
+    const currency = await currencyData.getCurrency();
+    // console.log(fromVal, toVal);
+    console.log(currency);
   },
 };
 
